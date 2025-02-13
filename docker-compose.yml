@@ -1,0 +1,27 @@
+services:
+  mongodb:
+    image: mongo:6.0
+    container_name: java-articles-mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+
+  java-articles-api:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: java-articles-api
+    container_name: java-articles-api
+    restart: always
+    depends_on:
+      - mongodb
+    env_file:
+      - .env.local
+    ports:
+      - "8080:8080"
+
+volumes:
+  mongo-data:
+    driver: local
